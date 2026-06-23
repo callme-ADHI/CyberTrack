@@ -415,7 +415,7 @@ function CasesOverTimeChart({ data }: { data: { date: string; count: number }[] 
         <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#5a6478" }} interval="preserveStartEnd" />
         <YAxis tick={{ fontSize: 10, fill: "#5a6478" }} allowDecimals={false} />
         <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid #e0e4ed" }} />
-        <Area type="monotone" dataKey="count" stroke="#0a1f44" strokeWidth={2.5} fill="url(#caseGrad)" dot={false} activeDot={{ r: 4, fill: "#0a1f44" }} />
+        <Area isAnimationActive={false} type="monotone" dataKey="count" stroke="#0a1f44" strokeWidth={2.5} fill="url(#caseGrad)" dot={false} activeDot={{ r: 4, fill: "#0a1f44" }} />
       </AreaChart>
     </ResponsiveContainer>
   );
@@ -429,7 +429,7 @@ function CategoryChart({ data }: { data: { name: string; count: number; pct: num
         <XAxis type="number" tick={{ fontSize: 10, fill: "#5a6478" }} allowDecimals={false} />
         <YAxis dataKey="name" type="category" tick={{ fontSize: 10, fill: "#5a6478" }} width={120} />
         <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} formatter={(v: number) => [v, "Cases"]} />
-        <Bar dataKey="count" radius={[0, 6, 6, 0]}>
+        <Bar isAnimationActive={false} dataKey="count" radius={[0, 6, 6, 0]}>
           {data.map((_, i) => <Cell key={i} fill={colorFor(i)} />)}
         </Bar>
       </BarChart>
@@ -446,7 +446,7 @@ function RatingChart({ data }: { data: { rating: string; count: number }[] }) {
         <XAxis dataKey="rating" tick={{ fontSize: 11, fill: "#5a6478" }} />
         <YAxis tick={{ fontSize: 10, fill: "#5a6478" }} allowDecimals={false} />
         <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} />
-        <Bar dataKey="count" radius={[6, 6, 0, 0]}>
+        <Bar isAnimationActive={false} dataKey="count" radius={[6, 6, 0, 0]}>
           {data.map((_, i) => <Cell key={i} fill={colors[i]} />)}
         </Bar>
       </BarChart>
@@ -462,7 +462,7 @@ function LocationChart({ data }: { data: { name: string; count: number }[] }) {
         <XAxis dataKey="name" tick={{ fontSize: 10, fill: "#5a6478" }} angle={-30} textAnchor="end" height={70} />
         <YAxis tick={{ fontSize: 10, fill: "#5a6478" }} allowDecimals={false} />
         <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} />
-        <Bar dataKey="count" fill="#8b0000" radius={[6, 6, 0, 0]} />
+        <Bar isAnimationActive={false} dataKey="count" fill="#8b0000" radius={[6, 6, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -477,7 +477,7 @@ function WeeklyChart({ data }: { data: { day: string; count: number }[] }) {
         <XAxis dataKey="day" tick={{ fontSize: 11, fill: "#5a6478" }} />
         <YAxis tick={{ fontSize: 10, fill: "#5a6478" }} allowDecimals={false} />
         <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} />
-        <Bar dataKey="count" radius={[6, 6, 0, 0]}>
+        <Bar isAnimationActive={false} dataKey="count" radius={[6, 6, 0, 0]}>
           {data.map((d, i) => (
             <Cell key={i} fill={`rgba(10,31,68,${0.3 + (d.count / max) * 0.7})`} />
           ))}

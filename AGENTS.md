@@ -1,6 +1,6 @@
-# Kerala Cyber Cell — Officer Portal
+# Cybercrime Police Station Palakkad — Portal
 
-Internal monitoring dashboard for the Kerala Police Cyber Cell.
+Internal monitoring dashboard for the Cybercrime Police Station, Palakkad.
 
 ## Stack
 - React 19 + TanStack Start (SSR)

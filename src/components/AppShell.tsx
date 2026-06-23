@@ -49,8 +49,8 @@ export function AppShell() {
           <img src={logo} alt="Kerala Police" className="w-9 h-9 rounded-full bg-white p-0.5 shrink-0" />
           {!collapsed && (
             <div className="leading-tight">
-              <div className="text-[15px] font-semibold">Cyber Cell</div>
-              <div className="text-[11px] text-white/60">Officer Portal</div>
+              <div className="text-[15px] font-semibold leading-tight">Cybercrime Police</div>
+              <div className="text-[11px] text-[#8192b0]">Palakkad Station</div>
             </div>
           )}
         </div>
@@ -92,7 +92,7 @@ export function AppShell() {
           </button>
           {!collapsed && (
             <p className="text-[10px] text-white/40 text-center mt-2 leading-tight">
-              Powered by Kerala Police<br />Cyber Cell
+              Powered by Kerala Police<br />Cybercrime Police Station Palakkad
             </p>
           )}
         </div>
@@ -117,11 +117,11 @@ export function AppShell() {
             </button>
             <img src={logo} alt="" className="w-8 h-8 hidden sm:block" />
             <div>
-              <h1 className="text-[15px] font-semibold text-[#0a1f44] leading-tight">
-                Kerala Cyber Cell
-              </h1>
-              <p className="text-[11px] text-[#5a6478] leading-tight">
-                Officer Monitoring Portal
+              <h2 className="text-[16px] font-semibold text-[#0a1f44] leading-tight">
+                Cybercrime Police Station
+              </h2>
+              <p className="text-[12px] text-[#5a6478]">
+                Palakkad
               </p>
             </div>
           </div>

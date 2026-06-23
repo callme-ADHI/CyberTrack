@@ -77,8 +77,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Kerala Cyber Cell — Officer Portal" },
-      { name: "description", content: "Internal monitoring portal for the Kerala Police Cyber Cell." },
+      { title: "Cybercrime Police Station Palakkad" },
+      { name: "description", content: "Internal monitoring portal for the Cybercrime Police Station, Palakkad." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

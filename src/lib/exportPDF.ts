@@ -26,7 +26,7 @@ export async function exportElementToPDF(
     pdf.setTextColor(90, 100, 120);
     pdf.text(new Date().toLocaleString("en-IN"), pageWidth - 10, 10, { align: "right" });
     pdf.text(
-      `Kerala Police — Cyber Cell | Confidential  •  Page ${pageNum}`,
+      `Cybercrime Police Station Palakkad | Confidential  •  Page ${pageNum}`,
       pageWidth / 2,
       pageHeight - 6,
       { align: "center" }
