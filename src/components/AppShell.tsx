@@ -9,6 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Menu,
+  MapPin,
 } from "lucide-react";
 import logo from "@/assets/kerala-police-logo.png";
 
@@ -17,6 +18,7 @@ const nav = [
   { to: "/cases", label: "All Cases", icon: FolderOpen },
   { to: "/analysis", label: "Analysis", icon: BarChart3 },
   { to: "/categories", label: "Categories", icon: Tags },
+  { to: "/locations", label: "Locations", icon: MapPin },
   { to: "/feedback", label: "Feedback", icon: MessageSquareQuote },
 ] as const;
 
