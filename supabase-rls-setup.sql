@@ -36,9 +36,13 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON public.locations TO anon;
 DROP POLICY IF EXISTS "anon_select_categories"  ON categories;
 DROP POLICY IF EXISTS "anon_insert_categories"  ON categories;
 DROP POLICY IF EXISTS "anon_update_categories"  ON categories;
+DROP POLICY IF EXISTS "anon_delete_categories"  ON categories;
 DROP POLICY IF EXISTS "anon_select_inquiries"   ON inquiries;
 DROP POLICY IF EXISTS "anon_insert_inquiries"   ON inquiries;
 DROP POLICY IF EXISTS "anon_select_locations"   ON locations;
+DROP POLICY IF EXISTS "anon_insert_locations"   ON locations;
+DROP POLICY IF EXISTS "anon_update_locations"   ON locations;
+DROP POLICY IF EXISTS "anon_delete_locations"   ON locations;
 DROP POLICY IF EXISTS "anon_select_officers"    ON officers;
 
 -- 3. SELECT (read) policies — allow anon to read all rows
