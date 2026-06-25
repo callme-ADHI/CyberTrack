@@ -25,7 +25,14 @@ ALTER TABLE inquiries   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE locations   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE officers    ENABLE ROW LEVEL SECURITY;
 
--- 2. Drop any existing conflicting policies (safe to run multiple times)
+-- 2. Grant basic permissions to anon role
+-- (This fixes the 401 Unauthorized permission denied errors)
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.inquiries TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.officers TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.categories TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.locations TO anon;
+
+-- 3. Drop any existing conflicting policies (safe to run multiple times)
 DROP POLICY IF EXISTS "anon_select_categories"  ON categories;
 DROP POLICY IF EXISTS "anon_insert_categories"  ON categories;
 DROP POLICY IF EXISTS "anon_update_categories"  ON categories;

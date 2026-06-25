@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useRef, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { supabase, type Inquiry } from "@/lib/supabase";
+import { supabase, type Inquiry, type Category } from "@/lib/supabase";
 import { Skeleton } from "@/components/Skeleton";
 import { colorFor } from "@/lib/colors";
 import {
@@ -67,9 +67,19 @@ function Analysis() {
     },
   });
 
+  const categoriesQ = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const { data } = await supabase.from("categories").select("*").order("name");
+      return (data || []) as Category[];
+    },
+  });
+
   const [preset, setPreset] = useState<Preset>("month");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  const [cat, setCat] = useState("");
+  const [moneyLossFilter, setMoneyLossFilter] = useState("");
   const reportRef = useRef<HTMLDivElement>(null);
   const [exporting, setExporting] = useState(false);
 
@@ -89,18 +99,30 @@ function Analysis() {
   const filtered = useMemo(() => {
     return (data || []).filter((i) => {
       const t = new Date(i.created_at).getTime();
-      return t >= range.start.getTime() && t <= range.end.getTime();
+      if (t < range.start.getTime() || t > range.end.getTime()) return false;
+      if (cat && String(i.category_id) !== cat) return false;
+      if (moneyLossFilter === "low" && (i.money_lost === null || i.money_lost >= 10000)) return false;
+      if (moneyLossFilter === "mid" && (i.money_lost === null || i.money_lost < 10000 || i.money_lost >= 50000)) return false;
+      if (moneyLossFilter === "high" && (i.money_lost === null || i.money_lost < 50000 || i.money_lost >= 100000)) return false;
+      if (moneyLossFilter === "severe" && (i.money_lost === null || i.money_lost < 100000)) return false;
+      return true;
     });
-  }, [data, range]);
+  }, [data, range, cat, moneyLossFilter]);
 
   const prevPeriod = useMemo(() => {
     const span = range.end.getTime() - range.start.getTime();
     const pStart = new Date(range.start.getTime() - span);
     return (data || []).filter((i) => {
       const t = new Date(i.created_at).getTime();
-      return t >= pStart.getTime() && t < range.start.getTime();
+      if (t < pStart.getTime() || t >= range.start.getTime()) return false;
+      if (cat && String(i.category_id) !== cat) return false;
+      if (moneyLossFilter === "low" && (i.money_lost === null || i.money_lost >= 10000)) return false;
+      if (moneyLossFilter === "mid" && (i.money_lost === null || i.money_lost < 10000 || i.money_lost >= 50000)) return false;
+      if (moneyLossFilter === "high" && (i.money_lost === null || i.money_lost < 50000 || i.money_lost >= 100000)) return false;
+      if (moneyLossFilter === "severe" && (i.money_lost === null || i.money_lost < 100000)) return false;
+      return true;
     });
-  }, [data, range]);
+  }, [data, range, cat, moneyLossFilter]);
 
   const stats = useMemo(() => {
     const total = filtered.length;
@@ -258,8 +280,21 @@ function Analysis() {
               className="px-3 py-1.5 text-[12px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44] bg-white"
             />
           </div>
-          {(from || to) && (
-            <button onClick={() => { setFrom(""); setTo(""); setPreset("month"); }} className="text-[11px] text-[#8b0000] hover:underline">
+          <select value={cat} onChange={(e) => setCat(e.target.value)} className="px-3 py-1.5 text-[12px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44] bg-white">
+            <option value="">All Categories</option>
+            {(categoriesQ.data || []).map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
+          <select value={moneyLossFilter} onChange={(e) => setMoneyLossFilter(e.target.value)} className="px-3 py-1.5 text-[12px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44] bg-white">
+            <option value="">Any Amount</option>
+            <option value="low">&lt; ₹10,000</option>
+            <option value="mid">₹10K - ₹50K</option>
+            <option value="high">₹50K - ₹1L</option>
+            <option value="severe">&gt; ₹1L</option>
+          </select>
+          {(from || to || cat || moneyLossFilter) && (
+            <button onClick={() => { setFrom(""); setTo(""); setCat(""); setMoneyLossFilter(""); setPreset("month"); }} className="text-[11px] text-[#8b0000] hover:underline">
               Clear
             </button>
           )}
