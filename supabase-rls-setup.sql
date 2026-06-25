@@ -54,13 +54,26 @@ CREATE POLICY "anon_select_locations"
 CREATE POLICY "anon_select_officers"
   ON officers FOR SELECT TO anon USING (true);
 
--- 4. INSERT policies — allow anon to create categories and inquiries
+-- 4. INSERT policies — allow anon to create categories, locations, and inquiries
 CREATE POLICY "anon_insert_categories"
   ON categories FOR INSERT TO anon WITH CHECK (true);
+
+CREATE POLICY "anon_insert_locations"
+  ON locations FOR INSERT TO anon WITH CHECK (true);
 
 CREATE POLICY "anon_insert_inquiries"
   ON inquiries FOR INSERT TO anon WITH CHECK (true);
 
--- 5. UPDATE policy — allow anon to edit categories (for the Categories page)
+-- 5. UPDATE policies — allow anon to edit categories and locations
 CREATE POLICY "anon_update_categories"
   ON categories FOR UPDATE TO anon USING (true) WITH CHECK (true);
+
+CREATE POLICY "anon_update_locations"
+  ON locations FOR UPDATE TO anon USING (true) WITH CHECK (true);
+
+-- 6. DELETE policies — allow anon to delete categories and locations
+CREATE POLICY "anon_delete_categories"
+  ON categories FOR DELETE TO anon USING (true);
+
+CREATE POLICY "anon_delete_locations"
+  ON locations FOR DELETE TO anon USING (true);
