@@ -100,8 +100,9 @@ function Feedback() {
     const start = subDays(new Date(), 90);
     const buckets: Record<string, number[]> = {};
     all.forEach((i) => {
+      if (!i.created_at) return;
       const d = new Date(i.created_at);
-      if (d < start) return;
+      if (isNaN(d.getTime()) || d < start) return;
       const wk = format(startOfWeek(d), "yyyy-MM-dd");
       if (!buckets[wk]) buckets[wk] = [];
       buckets[wk].push(i.rating || 0);
@@ -249,7 +250,7 @@ function Feedback() {
                       {f.complainant_name?.split(" ")[0] || "Anon"}
                     </span>
                     <span className="text-[11px] text-[#5a6478] ml-2">
-                      {format(new Date(f.created_at), "dd MMM yyyy")}
+                      {f.created_at && !isNaN(new Date(f.created_at).getTime()) ? format(new Date(f.created_at), "dd MMM yyyy") : "—"}
                     </span>
                   </div>
                   <RatingStars rating={f.rating} size={13} />
