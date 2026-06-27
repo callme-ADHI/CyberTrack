@@ -4,7 +4,7 @@ import html2canvas from "html2canvas";
 export async function exportElementToPDF(
   element: HTMLElement,
   filename = "report.pdf",
-  title = "Cybercrime Analysis Report"
+  title = "Cybercrime Analysis Report",
 ) {
   const canvas = await html2canvas(element, {
     scale: 2,
@@ -29,7 +29,7 @@ export async function exportElementToPDF(
       `Cybercrime Police Station Palakkad | Confidential  •  Page ${pageNum}`,
       pageWidth / 2,
       pageHeight - 6,
-      { align: "center" }
+      { align: "center" },
     );
   };
 
@@ -54,24 +54,24 @@ export async function exportElementToPDF(
 
 export function exportDataToPDF(stats: any, rangeStr: string, filename = "report.pdf") {
   const pdf = new jsPDF("p", "mm", "a4");
-  
+
   pdf.setFontSize(16);
   pdf.setTextColor(10, 31, 68);
   pdf.text("Cybercrime Intelligence Report", 14, 22);
-  
+
   pdf.setFontSize(10);
   pdf.setTextColor(90, 100, 120);
   pdf.text(`Reporting Period: ${rangeStr}`, 14, 30);
   pdf.text(`Generated On: ${new Date().toLocaleString("en-IN")}`, 14, 36);
-  
+
   pdf.setLineWidth(0.5);
   pdf.setDrawColor(220, 224, 237);
   pdf.line(14, 42, 196, 42);
-  
+
   pdf.setFontSize(12);
   pdf.setTextColor(10, 31, 68);
   pdf.text("Executive Summary", 14, 54);
-  
+
   pdf.setFontSize(10);
   pdf.setTextColor(50, 60, 80);
   pdf.text(`Total Registered Cases : ${stats.total}`, 14, 64);
@@ -79,11 +79,11 @@ export function exportDataToPDF(stats: any, rangeStr: string, filename = "report
   pdf.text(`Overall Satisfaction   : ${Math.round(stats.satisfaction)}%`, 14, 80);
   pdf.text(`Primary Crime Category : ${stats.topCat}`, 14, 88);
   pdf.text(`Primary Location       : ${stats.topLoc}`, 14, 96);
-  
+
   pdf.setFontSize(12);
   pdf.setTextColor(10, 31, 68);
   pdf.text("Category Breakdown (Top 15)", 14, 114);
-  
+
   pdf.setFontSize(10);
   pdf.setTextColor(50, 60, 80);
   let y = 124;
@@ -102,7 +102,7 @@ export function exportDataToPDF(stats: any, rangeStr: string, filename = "report
     pdf.setFontSize(12);
     pdf.setTextColor(10, 31, 68);
     pdf.text("Location Breakdown (Top 10)", 14, y);
-    
+
     y += 10;
     pdf.setFontSize(10);
     pdf.setTextColor(50, 60, 80);
@@ -112,14 +112,16 @@ export function exportDataToPDF(stats: any, rangeStr: string, filename = "report
       y += 8;
     });
   }
-  
+
   const pageCount = (pdf as any).internal.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     pdf.setPage(i);
     pdf.setFontSize(8);
     pdf.setTextColor(150, 150, 160);
-    pdf.text(`Cybercrime Police Station Palakkad | Confidential  •  Page ${i}`, 105, 285, { align: "center" });
+    pdf.text(`Cybercrime Police Station Palakkad | Confidential  •  Page ${i}`, 105, 285, {
+      align: "center",
+    });
   }
-  
+
   pdf.save(filename);
 }

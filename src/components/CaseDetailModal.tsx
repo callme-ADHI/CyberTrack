@@ -1,13 +1,15 @@
-import { X, Printer, Star } from "lucide-react";
+import { X, Printer, Star, Edit } from "lucide-react";
 import type { Inquiry } from "@/lib/supabase";
 import { format } from "date-fns";
 
 export function CaseDetailModal({
   inquiry,
   onClose,
+  onEdit,
 }: {
   inquiry: Inquiry | null;
   onClose: () => void;
+  onEdit?: () => void;
 }) {
   if (!inquiry) return null;
 
@@ -28,12 +30,20 @@ export function CaseDetailModal({
             <h2 className="text-xl font-semibold text-[#0a1f44]">#{inquiry.id}</h2>
           </div>
           <div className="flex gap-2">
-            <button onClick={print} className="btn-ghost flex items-center gap-1.5">
+            {onEdit && (
+              <button
+                onClick={onEdit}
+                className="btn-primary flex items-center gap-1.5 cursor-pointer"
+              >
+                <Edit size={14} /> Edit
+              </button>
+            )}
+            <button onClick={print} className="btn-ghost flex items-center gap-1.5 cursor-pointer">
               <Printer size={14} /> Print
             </button>
             <button
               onClick={onClose}
-              className="p-2 rounded-md hover:bg-[#f4f6f9] text-[#5a6478]"
+              className="p-2 rounded-md hover:bg-[#f4f6f9] text-[#5a6478] cursor-pointer"
             >
               <X size={18} />
             </button>
@@ -46,9 +56,7 @@ export function CaseDetailModal({
             <Field
               label="Location"
               value={
-                inquiry.locations
-                  ? `${inquiry.locations.name}, ${inquiry.locations.taluk}`
-                  : "—"
+                inquiry.locations ? `${inquiry.locations.name}, ${inquiry.locations.taluk}` : "—"
               }
             />
             <Field label="Complainant Name" value={inquiry.complainant_name} />
@@ -58,9 +66,7 @@ export function CaseDetailModal({
               value={format(new Date(inquiry.created_at), "dd MMM yyyy, HH:mm")}
             />
             <div>
-              <p className="text-[11px] uppercase tracking-wider text-[#5a6478] mb-1">
-                Rating
-              </p>
+              <p className="text-[11px] uppercase tracking-wider text-[#5a6478] mb-1">Rating</p>
               <div className="flex gap-0.5">
                 {[1, 2, 3, 4, 5].map((s) => (
                   <Star
@@ -88,9 +94,7 @@ export function CaseDetailModal({
 
           {inquiry.feedback && (
             <div>
-              <p className="text-[11px] uppercase tracking-wider text-[#5a6478] mb-1.5">
-                Feedback
-              </p>
+              <p className="text-[11px] uppercase tracking-wider text-[#5a6478] mb-1.5">Feedback</p>
               <p className="text-[14px] text-[#0d1b2a] bg-[#f4f6f9] p-3 rounded-md leading-relaxed italic">
                 "{inquiry.feedback}"
               </p>
@@ -125,11 +129,7 @@ export function RatingStars({ rating, size = 14 }: { rating: number; size?: numb
         <Star
           key={s}
           size={size}
-          className={
-            s <= (rating || 0)
-              ? "fill-[#c47d00] text-[#c47d00]"
-              : "text-[#e0e4ed]"
-          }
+          className={s <= (rating || 0) ? "fill-[#c47d00] text-[#c47d00]" : "text-[#e0e4ed]"}
         />
       ))}
     </div>

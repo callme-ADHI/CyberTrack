@@ -72,13 +72,17 @@
   * {
     border-color: var(--color-border);
   }
-  html, body {
+  html,
+  body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     color: var(--kp-blue);
     font-weight: 600;
     letter-spacing: -0.01em;
@@ -90,12 +94,14 @@
   border: 1px solid var(--color-border);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(10, 31, 68, 0.06);
-  transition: transform 200ms ease, box-shadow 200ms ease;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
 }
 @utility card-hover {
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(10, 31, 68, 0.10);
+    box-shadow: 0 8px 20px rgba(10, 31, 68, 0.1);
   }
 }
 @utility btn-primary {
@@ -106,7 +112,9 @@
   font-weight: 500;
   font-size: 14px;
   transition: background 150ms ease;
-  &:hover { background: #061533; }
+  &:hover {
+    background: #061533;
+  }
 }
 @utility btn-danger {
   background: var(--kp-red);
@@ -115,7 +123,9 @@
   border-radius: 8px;
   font-weight: 500;
   font-size: 14px;
-  &:hover { background: #6b0000; }
+  &:hover {
+    background: #6b0000;
+  }
 }
 @utility btn-ghost {
   background: transparent;
@@ -124,20 +134,33 @@
   border-radius: 8px;
   border: 1px solid var(--color-border);
   font-size: 14px;
-  &:hover { background: var(--color-surface); }
+  &:hover {
+    background: var(--color-surface);
+  }
 }
 @utility page-fade {
   animation: pageFade 240ms ease-out;
 }
 
 @keyframes pageFade {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes skeleton-pulse {
-  0%, 100% { opacity: 0.55; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 .skeleton {
   background: linear-gradient(90deg, #eef1f6 0%, #f6f8fb 50%, #eef1f6 100%);
@@ -146,6 +169,10 @@
   border-radius: 6px;
 }
 @keyframes skeleton-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }

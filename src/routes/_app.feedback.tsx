@@ -5,7 +5,15 @@ import { supabase, type Inquiry, type Category, type Location } from "@/lib/supa
 import { Skeleton, EmptyState } from "@/components/Skeleton";
 import { RatingStars } from "@/components/CaseDetailModal";
 import { format, startOfWeek, subDays } from "date-fns";
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from "recharts";
 
 export const Route = createFileRoute("/_app/feedback")({
   component: Feedback,
@@ -15,7 +23,12 @@ export const Route = createFileRoute("/_app/feedback")({
 function ClientOnly({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-  if (!mounted) return <div className="h-[220px] flex items-center justify-center text-[#5a6478] text-sm">Loading chart...</div>;
+  if (!mounted)
+    return (
+      <div className="h-[220px] flex items-center justify-center text-[#5a6478] text-sm">
+        Loading chart...
+      </div>
+    );
   return <>{children}</>;
 }
 
@@ -61,7 +74,7 @@ function Feedback() {
 
   const withFeedback = useMemo(
     () => all.filter((i) => i.feedback && i.feedback.trim().length > 0),
-    [all]
+    [all],
   );
 
   const summary = useMemo(() => {
@@ -125,23 +138,24 @@ function Feedback() {
     );
   }
 
-  if (isLoading) return (
-    <div className="space-y-6">
-      <Skeleton className="h-8 w-48" />
-      <div className="grid md:grid-cols-4 gap-4">
-        {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-32" />)}
+  if (isLoading)
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-8 w-48" />
+        <div className="grid md:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-32" />
+          ))}
+        </div>
+        <Skeleton className="h-64" />
       </div>
-      <Skeleton className="h-64" />
-    </div>
-  );
+    );
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl">Citizen Feedback</h1>
-        <p className="text-[13px] text-[#5a6478]">
-          Reviews, ratings, and satisfaction analytics.
-        </p>
+        <p className="text-[13px] text-[#5a6478]">Reviews, ratings, and satisfaction analytics.</p>
       </div>
 
       {/* Summary Cards */}
@@ -150,21 +164,29 @@ function Feedback() {
           <div className="text-[48px] font-semibold text-[#0a1f44] leading-none tabular-nums">
             {summary.avg.toFixed(1)}
           </div>
-          <div className="mt-2"><RatingStars rating={Math.round(summary.avg)} size={16} /></div>
+          <div className="mt-2">
+            <RatingStars rating={Math.round(summary.avg)} size={16} />
+          </div>
           <div className="text-[12px] text-[#5a6478] mt-2">Overall Rating</div>
         </div>
         <div className="card-surface p-5">
           <div className="text-[11px] uppercase tracking-wider text-[#5a6478]">Distribution</div>
           <div className="space-y-1.5 mt-3">
-            {summary.dist.slice().reverse().map((d) => (
-              <div key={d.r} className="flex items-center gap-2 text-[12px]">
-                <span className="w-6 text-[#5a6478]">{d.r}★</span>
-                <div className="flex-1 h-2 bg-[#f4f6f9] rounded-full overflow-hidden">
-                  <div className="h-full bg-[#c47d00] transition-all duration-700" style={{ width: `${(d.count / summary.max) * 100}%` }} />
+            {summary.dist
+              .slice()
+              .reverse()
+              .map((d) => (
+                <div key={d.r} className="flex items-center gap-2 text-[12px]">
+                  <span className="w-6 text-[#5a6478]">{d.r}★</span>
+                  <div className="flex-1 h-2 bg-[#f4f6f9] rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-[#c47d00] transition-all duration-700"
+                      style={{ width: `${(d.count / summary.max) * 100}%` }}
+                    />
+                  </div>
+                  <span className="w-8 text-right tabular-nums text-[#5a6478]">{d.count}</span>
                 </div>
-                <span className="w-8 text-right tabular-nums text-[#5a6478]">{d.count}</span>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
         <div className="card-surface p-5 flex flex-col justify-center">
@@ -172,14 +194,18 @@ function Feedback() {
           <div className="text-[36px] font-semibold text-[#1a7a4a] tabular-nums">
             {summary.positive.toFixed(0)}%
           </div>
-          <div className="text-[12px] text-[#5a6478] mt-1">{all.filter(i => i.rating >= 4).length} responses</div>
+          <div className="text-[12px] text-[#5a6478] mt-1">
+            {all.filter((i) => i.rating >= 4).length} responses
+          </div>
         </div>
         <div className="card-surface p-5 flex flex-col justify-center">
           <div className="text-[11px] uppercase tracking-wider text-[#5a6478]">Negative (1-2★)</div>
           <div className="text-[36px] font-semibold text-[#c0392b] tabular-nums">
             {summary.negative.toFixed(0)}%
           </div>
-          <div className="text-[12px] text-[#5a6478] mt-1">{all.filter(i => i.rating <= 2).length} responses</div>
+          <div className="text-[12px] text-[#5a6478] mt-1">
+            {all.filter((i) => i.rating <= 2).length} responses
+          </div>
         </div>
       </div>
 
@@ -204,23 +230,55 @@ function Feedback() {
               key={r}
               onClick={() => setRatingFilter(ratingFilter === r ? null : r)}
               className={`px-3 py-1 text-[12px] rounded-full border transition-colors ${
-                ratingFilter === r ? "bg-[#0a1f44] text-white border-[#0a1f44]" : "border-[#e0e4ed] text-[#5a6478]"
+                ratingFilter === r
+                  ? "bg-[#0a1f44] text-white border-[#0a1f44]"
+                  : "border-[#e0e4ed] text-[#5a6478]"
               }`}
             >
               {r}★
             </button>
           ))}
-          <select value={catFilter} onChange={(e) => setCatFilter(e.target.value)} className="px-3 py-1.5 text-[12px] border border-[#e0e4ed] rounded-md">
+          <select
+            value={catFilter}
+            onChange={(e) => setCatFilter(e.target.value)}
+            className="px-3 py-1.5 text-[12px] border border-[#e0e4ed] rounded-md"
+          >
             <option value="">All Categories</option>
-            {(categoriesQ.data || []).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            {(categoriesQ.data || []).map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
           </select>
-          <select value={locFilter} onChange={(e) => setLocFilter(e.target.value)} className="px-3 py-1.5 text-[12px] border border-[#e0e4ed] rounded-md">
+          <select
+            value={locFilter}
+            onChange={(e) => setLocFilter(e.target.value)}
+            className="px-3 py-1.5 text-[12px] border border-[#e0e4ed] rounded-md"
+          >
             <option value="">All Locations</option>
-            {(locationsQ.data || []).map((l) => <option key={l.id} value={l.id}>{l.name}</option>)}
+            {(locationsQ.data || []).map((l) => (
+              <option key={l.id} value={l.id}>
+                {l.name}
+              </option>
+            ))}
           </select>
-          <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="px-2 py-1 text-[12px] border border-[#e0e4ed] rounded-md" />
-          <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="px-2 py-1 text-[12px] border border-[#e0e4ed] rounded-md" />
-          <select value={sort} onChange={(e) => setSort(e.target.value)} className="px-3 py-1.5 text-[12px] border border-[#e0e4ed] rounded-md ml-auto">
+          <input
+            type="date"
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+            className="px-2 py-1 text-[12px] border border-[#e0e4ed] rounded-md"
+          />
+          <input
+            type="date"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            className="px-2 py-1 text-[12px] border border-[#e0e4ed] rounded-md"
+          />
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="px-3 py-1.5 text-[12px] border border-[#e0e4ed] rounded-md ml-auto"
+          >
             <option value="newest">Newest</option>
             <option value="high">Highest Rating</option>
             <option value="low">Lowest Rating</option>
@@ -250,7 +308,9 @@ function Feedback() {
                       {f.complainant_name?.split(" ")[0] || "Anon"}
                     </span>
                     <span className="text-[11px] text-[#5a6478] ml-2">
-                      {f.created_at && !isNaN(new Date(f.created_at).getTime()) ? format(new Date(f.created_at), "dd MMM yyyy") : "—"}
+                      {f.created_at && !isNaN(new Date(f.created_at).getTime())
+                        ? format(new Date(f.created_at), "dd MMM yyyy")
+                        : "—"}
                     </span>
                   </div>
                   <RatingStars rating={f.rating} size={13} />
@@ -310,7 +370,13 @@ function TrendChart({ trend }: { trend: { week: string; avg: number }[] }) {
         <XAxis dataKey="week" tick={{ fontSize: 11, fill: "#5a6478" }} />
         <YAxis domain={[0, 5]} tick={{ fontSize: 11, fill: "#5a6478" }} />
         <Tooltip />
-        <Area type="monotone" dataKey="avg" stroke="#0a1f44" fill="url(#ratingGradFeedback)" strokeWidth={2} />
+        <Area
+          type="monotone"
+          dataKey="avg"
+          stroke="#0a1f44"
+          fill="url(#ratingGradFeedback)"
+          strokeWidth={2}
+        />
       </AreaChart>
     </ResponsiveContainer>
   );

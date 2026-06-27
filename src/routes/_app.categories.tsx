@@ -47,7 +47,7 @@ function Categories() {
   }, [inqQ.data]);
 
   const filtered = (catQ.data || []).filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase())
+    c.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   const saveMutation = useMutation({
@@ -56,7 +56,7 @@ function Categories() {
         throw new Error("Name and description are required");
       }
       const dup = (catQ.data || []).find(
-        (c) => c.name.toLowerCase() === name.trim().toLowerCase() && c.id !== editing?.id
+        (c) => c.name.toLowerCase() === name.trim().toLowerCase() && c.id !== editing?.id,
       );
       if (dup) throw new Error("A category with this name already exists");
 
@@ -118,12 +118,15 @@ function Categories() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl">Categories</h1>
-          <p className="text-[13px] text-[#5a6478]">
-            Manage cybercrime classification categories.
-          </p>
+          <p className="text-[13px] text-[#5a6478]">Manage cybercrime classification categories.</p>
         </div>
         <button
-          onClick={() => { setShowForm(true); setEditing(null); setName(""); setDescription(""); }}
+          onClick={() => {
+            setShowForm(true);
+            setEditing(null);
+            setName("");
+            setDescription("");
+          }}
           className="btn-primary flex items-center gap-2"
         >
           <Plus size={14} /> New Category
@@ -151,18 +154,33 @@ function Categories() {
           <div className="space-y-3">
             <div>
               <label className="text-[12px] text-[#5a6478] block mb-1">Category Name *</label>
-              <input value={name} onChange={(e) => setName(e.target.value)} className="w-full px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44]" />
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44]"
+              />
             </div>
             <div>
               <label className="text-[12px] text-[#5a6478] block mb-1">Description *</label>
-              <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} className="w-full px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44]" />
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+                className="w-full px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44]"
+              />
             </div>
             {err && <p className="text-[12px] text-[#c0392b]">{err}</p>}
             <div className="flex gap-2">
-              <button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending} className="btn-primary disabled:opacity-50">
+              <button
+                onClick={() => saveMutation.mutate()}
+                disabled={saveMutation.isPending}
+                className="btn-primary disabled:opacity-50"
+              >
                 {saveMutation.isPending ? "Saving..." : editing ? "Update" : "Create"}
               </button>
-              <button onClick={reset} className="btn-ghost">Cancel</button>
+              <button onClick={reset} className="btn-ghost">
+                Cancel
+              </button>
             </div>
           </div>
         </div>
@@ -170,7 +188,9 @@ function Categories() {
 
       {catQ.isLoading ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-32" />)}
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-32" />
+          ))}
         </div>
       ) : filtered.length === 0 ? (
         <EmptyState message="No categories found." />
@@ -237,7 +257,8 @@ function Categories() {
             </p>
             {(counts[confirmDelete.id] || 0) > 0 && (
               <p className="text-[12px] text-[#c47d00] bg-[#fdf3e0] rounded-md px-3 py-2 mb-4">
-                ⚠️ This category has {counts[confirmDelete.id]} linked case(s). Deleting it may affect those records.
+                ⚠️ This category has {counts[confirmDelete.id]} linked case(s). Deleting it may
+                affect those records.
               </p>
             )}
 
@@ -249,10 +270,7 @@ function Categories() {
               >
                 {deleteMutation.isPending ? "Deleting..." : "Yes, Delete"}
               </button>
-              <button
-                onClick={() => setConfirmDelete(null)}
-                className="btn-ghost flex-1"
-              >
+              <button onClick={() => setConfirmDelete(null)} className="btn-ghost flex-1">
                 Cancel
               </button>
             </div>

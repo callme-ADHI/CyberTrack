@@ -1,10 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase, type Inquiry, type Category, type Location } from "@/lib/supabase";
 import { CaseDetailModal, maskPhone, RatingStars } from "@/components/CaseDetailModal";
+import { AddCaseModal } from "@/components/AddCaseModal";
 import { Skeleton, EmptyState } from "@/components/Skeleton";
-import { Search, Download, X } from "lucide-react";
+import { Search, Download, X, Plus } from "lucide-react";
 import { format } from "date-fns";
 
 export const Route = createFileRoute("/_app/cases")({
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/_app/cases")({
 });
 
 function AllCases() {
+  const navigate = useNavigate();
   const inquiriesQ = useQuery({
     queryKey: ["inquiries", "all"],
     queryFn: async () => {
@@ -50,6 +52,8 @@ function AllCases() {
   const [sort, setSort] = useState("newest");
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState<Inquiry | null>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [inquiryToEdit, setInquiryToEdit] = useState<Inquiry | null>(null);
   const PER_PAGE = 25;
 
   const taluks = useMemo(() => {
@@ -66,7 +70,7 @@ function AllCases() {
         (i) =>
           i.complainant_name?.toLowerCase().includes(q) ||
           i.complainant_phone?.includes(q) ||
-          i.description?.toLowerCase().includes(q)
+          i.description?.toLowerCase().includes(q),
       );
     }
     if (cat) list = list.filter((i) => String(i.category_id) === cat);
@@ -75,12 +79,13 @@ function AllCases() {
     if (from) list = list.filter((i) => new Date(i.created_at) >= new Date(from));
     if (to) list = list.filter((i) => new Date(i.created_at) <= new Date(to + "T23:59:59"));
     if (rating !== null) list = list.filter((i) => i.rating === rating);
-    if (minLoss) list = list.filter((i) => i.money_lost !== null && i.money_lost >= Number(minLoss));
-    if (maxLoss) list = list.filter((i) => i.money_lost !== null && i.money_lost <= Number(maxLoss));
+    if (minLoss)
+      list = list.filter((i) => i.money_lost !== null && i.money_lost >= Number(minLoss));
+    if (maxLoss)
+      list = list.filter((i) => i.money_lost !== null && i.money_lost <= Number(maxLoss));
 
     list = [...list];
-    if (sort === "newest")
-      list.sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at));
+    if (sort === "newest") list.sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at));
     else if (sort === "oldest")
       list.sort((a, b) => +new Date(a.created_at) - +new Date(b.created_at));
     else if (sort === "rating-high") list.sort((a, b) => b.rating - a.rating);
@@ -106,7 +111,17 @@ function AllCases() {
   };
 
   const exportCSV = () => {
-    const headers = ["Case ID", "Complainant", "Phone", "Category", "Location", "Taluk", "Rating", "Money Lost", "Date"];
+    const headers = [
+      "Case ID",
+      "Complainant",
+      "Phone",
+      "Category",
+      "Location",
+      "Taluk",
+      "Rating",
+      "Money Lost",
+      "Date",
+    ];
     const rows = filtered.map((i) => [
       i.id,
       i.complainant_name,
@@ -138,9 +153,17 @@ function AllCases() {
             Showing {pageData.length} of {total} cases
           </p>
         </div>
-        <button onClick={exportCSV} className="btn-primary flex items-center gap-2">
-          <Download size={14} /> Export CSV
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => navigate({ to: "/new-case" })}
+            className="btn-primary flex items-center gap-2 cursor-pointer"
+          >
+            <Plus size={14} /> New Case
+          </button>
+          <button onClick={exportCSV} className="btn-ghost flex items-center gap-2 cursor-pointer">
+            <Download size={14} /> Export CSV
+          </button>
+        </div>
       </div>
 
       <div className="card-surface p-4 space-y-3">
@@ -149,35 +172,99 @@ function AllCases() {
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5a6478]" />
             <input
               value={search}
-              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
               placeholder="Search name, phone, description..."
               className="w-full pl-9 pr-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44]"
             />
           </div>
-          <select value={cat} onChange={(e) => { setCat(e.target.value); setPage(1); }} className="px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md">
+          <select
+            value={cat}
+            onChange={(e) => {
+              setCat(e.target.value);
+              setPage(1);
+            }}
+            className="px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md"
+          >
             <option value="">All Categories</option>
             {(categoriesQ.data || []).map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
             ))}
           </select>
-          <select value={loc} onChange={(e) => { setLoc(e.target.value); setPage(1); }} className="px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md">
+          <select
+            value={loc}
+            onChange={(e) => {
+              setLoc(e.target.value);
+              setPage(1);
+            }}
+            className="px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md"
+          >
             <option value="">All Locations</option>
             {(locationsQ.data || []).map((l) => (
-              <option key={l.id} value={l.id}>{l.name}</option>
+              <option key={l.id} value={l.id}>
+                {l.name}
+              </option>
             ))}
           </select>
-          <select value={taluk} onChange={(e) => { setTaluk(e.target.value); setPage(1); }} className="px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md">
+          <select
+            value={taluk}
+            onChange={(e) => {
+              setTaluk(e.target.value);
+              setPage(1);
+            }}
+            className="px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md"
+          >
             <option value="">All Taluks</option>
-            {taluks.map((t) => <option key={t} value={t}>{t}</option>)}
+            {taluks.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
           </select>
-          <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="px-2 py-2 text-[13px] border border-[#e0e4ed] rounded-md" />
-          <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="px-2 py-2 text-[13px] border border-[#e0e4ed] rounded-md" />
+          <input
+            type="date"
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+            className="px-2 py-2 text-[13px] border border-[#e0e4ed] rounded-md"
+          />
+          <input
+            type="date"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            className="px-2 py-2 text-[13px] border border-[#e0e4ed] rounded-md"
+          />
           <div className="flex items-center gap-1">
-            <input type="number" placeholder="Min ₹" value={minLoss} onChange={(e) => { setMinLoss(e.target.value); setPage(1); }} className="w-20 px-2 py-2 text-[13px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44]" />
+            <input
+              type="number"
+              placeholder="Min ₹"
+              value={minLoss}
+              onChange={(e) => {
+                setMinLoss(e.target.value);
+                setPage(1);
+              }}
+              className="w-20 px-2 py-2 text-[13px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44]"
+            />
             <span className="text-[#5a6478]">-</span>
-            <input type="number" placeholder="Max ₹" value={maxLoss} onChange={(e) => { setMaxLoss(e.target.value); setPage(1); }} className="w-20 px-2 py-2 text-[13px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44]" />
+            <input
+              type="number"
+              placeholder="Max ₹"
+              value={maxLoss}
+              onChange={(e) => {
+                setMaxLoss(e.target.value);
+                setPage(1);
+              }}
+              className="w-20 px-2 py-2 text-[13px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44]"
+            />
           </div>
-          <select value={sort} onChange={(e) => setSort(e.target.value)} className="px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md">
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md"
+          >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
             <option value="rating-high">Rating High-Low</option>
@@ -199,7 +286,10 @@ function AllCases() {
               {r}★
             </button>
           ))}
-          <button onClick={clearFilters} className="ml-auto text-[12px] text-[#8b0000] flex items-center gap-1 hover:underline">
+          <button
+            onClick={clearFilters}
+            className="ml-auto text-[12px] text-[#8b0000] flex items-center gap-1 hover:underline"
+          >
             <X size={12} /> Clear filters
           </button>
         </div>
@@ -208,7 +298,9 @@ function AllCases() {
       <div className="card-surface overflow-hidden">
         {inquiriesQ.isLoading ? (
           <div className="p-6 space-y-2">
-            {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-10" />)}
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-10" />
+            ))}
           </div>
         ) : pageData.length === 0 ? (
           <EmptyState message="No cases match your filters." />
@@ -235,15 +327,17 @@ function AllCases() {
                     i.rating <= 2
                       ? "bg-[#fdecea] text-[#c0392b]"
                       : i.rating === 3
-                      ? "bg-[#fdf3e0] text-[#c47d00]"
-                      : "bg-[#e6f4ec] text-[#1a7a4a]";
+                        ? "bg-[#fdf3e0] text-[#c47d00]"
+                        : "bg-[#e6f4ec] text-[#1a7a4a]";
                   return (
                     <tr
                       key={i.id}
                       onClick={() => setSelected(i)}
                       className="cursor-pointer border-t border-[#e0e4ed] hover:bg-[#f8f9fc] transition-colors"
                     >
-                      <td className="px-3 py-2.5 text-[#5a6478]">{(page - 1) * PER_PAGE + idx + 1}</td>
+                      <td className="px-3 py-2.5 text-[#5a6478]">
+                        {(page - 1) * PER_PAGE + idx + 1}
+                      </td>
                       <td className="px-3 py-2.5 font-medium">#{i.id}</td>
                       <td className="px-3 py-2.5">{i.complainant_name}</td>
                       <td className="px-3 py-2.5 tabular-nums">{maskPhone(i.complainant_phone)}</td>
@@ -254,7 +348,9 @@ function AllCases() {
                         {i.money_lost ? i.money_lost.toLocaleString("en-IN") : "—"}
                       </td>
                       <td className="px-3 py-2.5">
-                        <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${ratingBg}`}>
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${ratingBg}`}
+                        >
                           {i.rating}★
                         </span>
                       </td>
@@ -310,7 +406,24 @@ function AllCases() {
         )}
       </div>
 
-      <CaseDetailModal inquiry={selected} onClose={() => setSelected(null)} />
+      <CaseDetailModal
+        inquiry={selected}
+        onClose={() => setSelected(null)}
+        onEdit={() => {
+          setInquiryToEdit(selected);
+          setSelected(null);
+          setIsAddModalOpen(true);
+        }}
+      />
+
+      <AddCaseModal
+        isOpen={isAddModalOpen}
+        onClose={() => {
+          setIsAddModalOpen(false);
+          setInquiryToEdit(null);
+        }}
+        inquiryToEdit={inquiryToEdit}
+      />
     </div>
   );
 }

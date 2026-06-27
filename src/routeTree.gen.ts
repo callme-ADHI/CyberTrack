@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppNewCaseRouteImport } from './routes/_app.new-case'
+import { Route as AppLocationsRouteImport } from './routes/_app.locations'
 import { Route as AppFeedbackRouteImport } from './routes/_app.feedback'
 import { Route as AppCategoriesRouteImport } from './routes/_app.categories'
 import { Route as AppCasesRouteImport } from './routes/_app.cases'
@@ -29,6 +31,16 @@ const AppRoute = AppRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNewCaseRoute = AppNewCaseRouteImport.update({
+  id: '/new-case',
+  path: '/new-case',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLocationsRoute = AppLocationsRouteImport.update({
+  id: '/locations',
+  path: '/locations',
   getParentRoute: () => AppRoute,
 } as any)
 const AppFeedbackRoute = AppFeedbackRouteImport.update({
@@ -59,6 +71,8 @@ export interface FileRoutesByFullPath {
   '/cases': typeof AppCasesRoute
   '/categories': typeof AppCategoriesRoute
   '/feedback': typeof AppFeedbackRoute
+  '/locations': typeof AppLocationsRoute
+  '/new-case': typeof AppNewCaseRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -66,6 +80,8 @@ export interface FileRoutesByTo {
   '/cases': typeof AppCasesRoute
   '/categories': typeof AppCategoriesRoute
   '/feedback': typeof AppFeedbackRoute
+  '/locations': typeof AppLocationsRoute
+  '/new-case': typeof AppNewCaseRoute
   '/': typeof AppIndexRoute
 }
 export interface FileRoutesById {
@@ -76,6 +92,8 @@ export interface FileRoutesById {
   '/_app/cases': typeof AppCasesRoute
   '/_app/categories': typeof AppCategoriesRoute
   '/_app/feedback': typeof AppFeedbackRoute
+  '/_app/locations': typeof AppLocationsRoute
+  '/_app/new-case': typeof AppNewCaseRoute
   '/_app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
@@ -87,8 +105,18 @@ export interface FileRouteTypes {
     | '/cases'
     | '/categories'
     | '/feedback'
+    | '/locations'
+    | '/new-case'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/analysis' | '/cases' | '/categories' | '/feedback' | '/'
+  to:
+    | '/login'
+    | '/analysis'
+    | '/cases'
+    | '/categories'
+    | '/feedback'
+    | '/locations'
+    | '/new-case'
+    | '/'
   id:
     | '__root__'
     | '/_app'
@@ -97,6 +125,8 @@ export interface FileRouteTypes {
     | '/_app/cases'
     | '/_app/categories'
     | '/_app/feedback'
+    | '/_app/locations'
+    | '/_app/new-case'
     | '/_app/'
   fileRoutesById: FileRoutesById
 }
@@ -126,6 +156,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/new-case': {
+      id: '/_app/new-case'
+      path: '/new-case'
+      fullPath: '/new-case'
+      preLoaderRoute: typeof AppNewCaseRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/locations': {
+      id: '/_app/locations'
+      path: '/locations'
+      fullPath: '/locations'
+      preLoaderRoute: typeof AppLocationsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/feedback': {
@@ -164,6 +208,8 @@ interface AppRouteChildren {
   AppCasesRoute: typeof AppCasesRoute
   AppCategoriesRoute: typeof AppCategoriesRoute
   AppFeedbackRoute: typeof AppFeedbackRoute
+  AppLocationsRoute: typeof AppLocationsRoute
+  AppNewCaseRoute: typeof AppNewCaseRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
@@ -172,6 +218,8 @@ const AppRouteChildren: AppRouteChildren = {
   AppCasesRoute: AppCasesRoute,
   AppCategoriesRoute: AppCategoriesRoute,
   AppFeedbackRoute: AppFeedbackRoute,
+  AppLocationsRoute: AppLocationsRoute,
+  AppNewCaseRoute: AppNewCaseRoute,
   AppIndexRoute: AppIndexRoute,
 }
 

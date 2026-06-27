@@ -3,6 +3,7 @@
 Internal monitoring dashboard for the Cybercrime Police Station, Palakkad.
 
 ## Stack
+
 - React 19 + TanStack Start (SSR)
 - TanStack Router + TanStack Query
 - Supabase (PostgreSQL)
@@ -19,7 +20,7 @@ npm run dev
 
 ## Environment Variables
 
-| Variable | Description |
-|---|---|
-| `VITE_SUPABASE_URL` | Supabase project URL |
+| Variable                 | Description                  |
+| ------------------------ | ---------------------------- |
+| `VITE_SUPABASE_URL`      | Supabase project URL         |
 | `VITE_SUPABASE_ANON_KEY` | Supabase anon/public JWT key |

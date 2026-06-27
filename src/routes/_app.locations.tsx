@@ -45,9 +45,10 @@ function Locations() {
     return map;
   }, [inqQ.data]);
 
-  const filtered = (locQ.data || []).filter((l) =>
-    l.name.toLowerCase().includes(search.toLowerCase()) ||
-    l.taluk.toLowerCase().includes(search.toLowerCase())
+  const filtered = (locQ.data || []).filter(
+    (l) =>
+      l.name.toLowerCase().includes(search.toLowerCase()) ||
+      l.taluk.toLowerCase().includes(search.toLowerCase()),
   );
 
   const saveMutation = useMutation({
@@ -56,7 +57,7 @@ function Locations() {
         throw new Error("Name and taluk are required");
       }
       const dup = (locQ.data || []).find(
-        (l) => l.name.toLowerCase() === name.trim().toLowerCase() && l.id !== editing?.id
+        (l) => l.name.toLowerCase() === name.trim().toLowerCase() && l.id !== editing?.id,
       );
       if (dup) throw new Error("A location with this name already exists");
 
@@ -118,12 +119,15 @@ function Locations() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl">Locations</h1>
-          <p className="text-[13px] text-[#5a6478]">
-            Manage geographical locations and taluks.
-          </p>
+          <p className="text-[13px] text-[#5a6478]">Manage geographical locations and taluks.</p>
         </div>
         <button
-          onClick={() => { setShowForm(true); setEditing(null); setName(""); setTaluk(""); }}
+          onClick={() => {
+            setShowForm(true);
+            setEditing(null);
+            setName("");
+            setTaluk("");
+          }}
           className="btn-primary flex items-center gap-2"
         >
           <Plus size={14} /> New Location
@@ -151,18 +155,34 @@ function Locations() {
           <div className="space-y-3">
             <div>
               <label className="text-[12px] text-[#5a6478] block mb-1">Location Name *</label>
-              <input value={name} onChange={(e) => setName(e.target.value)} className="w-full px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44]" placeholder="e.g. Agali" />
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44]"
+                placeholder="e.g. Agali"
+              />
             </div>
             <div>
               <label className="text-[12px] text-[#5a6478] block mb-1">Taluk *</label>
-              <input value={taluk} onChange={(e) => setTaluk(e.target.value)} className="w-full px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44]" placeholder="e.g. Mannarkkad" />
+              <input
+                value={taluk}
+                onChange={(e) => setTaluk(e.target.value)}
+                className="w-full px-3 py-2 text-[13px] border border-[#e0e4ed] rounded-md focus:outline-none focus:border-[#0a1f44]"
+                placeholder="e.g. Mannarkkad"
+              />
             </div>
             {err && <p className="text-[12px] text-[#c0392b]">{err}</p>}
             <div className="flex gap-2">
-              <button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending} className="btn-primary disabled:opacity-50">
+              <button
+                onClick={() => saveMutation.mutate()}
+                disabled={saveMutation.isPending}
+                className="btn-primary disabled:opacity-50"
+              >
                 {saveMutation.isPending ? "Saving..." : editing ? "Update" : "Create"}
               </button>
-              <button onClick={reset} className="btn-ghost">Cancel</button>
+              <button onClick={reset} className="btn-ghost">
+                Cancel
+              </button>
             </div>
           </div>
         </div>
@@ -170,7 +190,9 @@ function Locations() {
 
       {locQ.isLoading ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-32" />)}
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-32" />
+          ))}
         </div>
       ) : filtered.length === 0 ? (
         <EmptyState message="No locations found." />
@@ -240,7 +262,8 @@ function Locations() {
             </p>
             {(counts[confirmDelete.id] || 0) > 0 && (
               <p className="text-[12px] text-[#c47d00] bg-[#fdf3e0] rounded-md px-3 py-2 mb-4">
-                ⚠️ This location has {counts[confirmDelete.id]} linked case(s). Deleting it may affect those records.
+                ⚠️ This location has {counts[confirmDelete.id]} linked case(s). Deleting it may
+                affect those records.
               </p>
             )}
 
@@ -252,10 +275,7 @@ function Locations() {
               >
                 {deleteMutation.isPending ? "Deleting..." : "Yes, Delete"}
               </button>
-              <button
-                onClick={() => setConfirmDelete(null)}
-                className="btn-ghost flex-1"
-              >
+              <button onClick={() => setConfirmDelete(null)} className="btn-ghost flex-1">
                 Cancel
               </button>
             </div>

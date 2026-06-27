@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase, type Inquiry } from "@/lib/supabase";
 import { CaseDetailModal, maskPhone, RatingStars } from "@/components/CaseDetailModal";
+import { AddCaseModal } from "@/components/AddCaseModal";
 import { Skeleton, EmptyState } from "@/components/Skeleton";
 import {
   CalendarDays,
@@ -11,6 +12,7 @@ import {
   Star,
   MapPin,
   AlertTriangle,
+  Plus,
 } from "lucide-react";
 import {
   PieChart,
@@ -48,8 +50,11 @@ function useInquiries() {
 }
 
 function Dashboard() {
+  const navigate = useNavigate();
   const { data, isLoading, error } = useInquiries();
   const [selected, setSelected] = useState<Inquiry | null>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [inquiryToEdit, setInquiryToEdit] = useState<Inquiry | null>(null);
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
@@ -119,11 +124,19 @@ function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl">Dashboard</h1>
-        <p className="text-[13px] text-[#5a6478]">
-          Real-time overview of cybercrime complaints across Kerala.
-        </p>
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h1 className="text-2xl">Dashboard</h1>
+          <p className="text-[13px] text-[#5a6478]">
+            Real-time overview of cybercrime complaints across Kerala.
+          </p>
+        </div>
+        <button
+          onClick={() => navigate({ to: "/new-case" })}
+          className="btn-primary flex items-center gap-2 cursor-pointer"
+        >
+          <Plus size={14} /> New Case
+        </button>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
@@ -137,11 +150,7 @@ function Dashboard() {
           label="This Month"
           value={stats.monthCount}
         />
-        <MetricCard
-          icon={<Database size={18} />}
-          label="All Time"
-          value={stats.allCount}
-        />
+        <MetricCard icon={<Database size={18} />} label="All Time" value={stats.allCount} />
         <MetricCard
           icon={<Star size={18} />}
           label="Avg Rating"
@@ -165,9 +174,7 @@ function Dashboard() {
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="card-surface lg:col-span-2 p-5">
           <h3 className="text-[15px] mb-1">Today's Cases</h3>
-          <p className="text-[12px] text-[#5a6478] mb-4">
-            Live feed · refreshes every 60s
-          </p>
+          <p className="text-[12px] text-[#5a6478] mb-4">Live feed · refreshes every 60s</p>
           {stats.today.length === 0 ? (
             <EmptyState message="No cases reported today yet." />
           ) : (
@@ -270,7 +277,24 @@ function Dashboard() {
         </div>
       </div>
 
-      <CaseDetailModal inquiry={selected} onClose={() => setSelected(null)} />
+      <CaseDetailModal
+        inquiry={selected}
+        onClose={() => setSelected(null)}
+        onEdit={() => {
+          setInquiryToEdit(selected);
+          setSelected(null);
+          setIsAddModalOpen(true);
+        }}
+      />
+
+      <AddCaseModal
+        isOpen={isAddModalOpen}
+        onClose={() => {
+          setIsAddModalOpen(false);
+          setInquiryToEdit(null);
+        }}
+        inquiryToEdit={inquiryToEdit}
+      />
     </div>
   );
 }

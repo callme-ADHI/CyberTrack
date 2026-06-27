@@ -19,7 +19,7 @@ function Login() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    
+
     try {
       const { data, error: sbError } = await supabase
         .from("officers")
@@ -27,7 +27,7 @@ function Login() {
         .eq("username", username)
         .eq("password", password)
         .single();
-        
+
       if (data) {
         localStorage.setItem("auth", "true");
         router.navigate({ to: "/cases" });
@@ -45,24 +45,23 @@ function Login() {
     <div className="min-h-screen bg-[#f4f6f9] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <img src={logo} alt="Kerala Police Logo" className="h-20 w-20 bg-white rounded-full p-1 shadow-sm" />
+          <img
+            src={logo}
+            alt="Kerala Police Logo"
+            className="h-20 w-20 bg-white rounded-full p-1 shadow-sm"
+          />
         </div>
         <h2 className="mt-6 text-center text-2xl font-bold text-[#0a1f44] tracking-tight">
           Cybercrime Police Station
         </h2>
-        <p className="mt-2 text-center text-sm text-[#5a6478]">
-          Palakkad District
-        </p>
+        <p className="mt-2 text-center text-sm text-[#5a6478]">Palakkad District</p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow-sm border border-[#e0e4ed] sm:rounded-xl sm:px-10">
           <form className="space-y-6" onSubmit={handleLogin}>
-            
             <div>
-              <label className="block text-sm font-medium text-[#0a1f44]">
-                Username
-              </label>
+              <label className="block text-sm font-medium text-[#0a1f44]">Username</label>
               <div className="mt-2 relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <User className="h-5 w-5 text-[#8192b0]" />
@@ -79,9 +78,7 @@ function Login() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#0a1f44]">
-                Password
-              </label>
+              <label className="block text-sm font-medium text-[#0a1f44]">Password</label>
               <div className="mt-2 relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Lock className="h-5 w-5 text-[#8192b0]" />
@@ -116,7 +113,8 @@ function Login() {
 
           <div className="mt-8 pt-6 border-t border-[#e0e4ed]">
             <p className="text-xs text-center text-[#8192b0]">
-              Unauthorized access is strictly prohibited.<br />
+              Unauthorized access is strictly prohibited.
+              <br />
               All login attempts are monitored and recorded.
             </p>
           </div>

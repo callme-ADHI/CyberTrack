@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   FolderOpen,
+  PlusCircle,
   BarChart3,
   Tags,
   MessageSquareQuote,
@@ -16,6 +17,7 @@ import logo from "@/assets/kerala-police-logo.png";
 const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/cases", label: "All Cases", icon: FolderOpen },
+  { to: "/new-case", label: "Register Case", icon: PlusCircle },
   { to: "/analysis", label: "Analysis", icon: BarChart3 },
   { to: "/categories", label: "Categories", icon: Tags },
   { to: "/locations", label: "Locations", icon: MapPin },
@@ -35,8 +37,7 @@ export function AppShell() {
     return () => clearInterval(t);
   }, []);
 
-  const isActive = (to: string) =>
-    to === "/" ? pathname === "/" : pathname.startsWith(to);
+  const isActive = (to: string) => (to === "/" ? pathname === "/" : pathname.startsWith(to));
 
   return (
     <div className="flex min-h-screen bg-white">
@@ -48,7 +49,11 @@ export function AppShell() {
         style={{ background: "#0a1f44" }}
       >
         <div className="flex items-center gap-3 px-4 py-5 border-b border-white/10">
-          <img src={logo} alt="Kerala Police" className="w-9 h-9 rounded-full bg-white p-0.5 shrink-0" />
+          <img
+            src={logo}
+            alt="Kerala Police"
+            className="w-9 h-9 rounded-full bg-white p-0.5 shrink-0"
+          />
           {!collapsed && (
             <div className="leading-tight">
               <div className="text-[15px] font-semibold leading-tight">Cybercrime Police</div>
@@ -90,11 +95,19 @@ export function AppShell() {
             onClick={() => setCollapsed((c) => !c)}
             className="hidden md:flex w-full items-center justify-center gap-2 text-[12px] text-white/60 hover:text-white py-1.5 rounded"
           >
-            {collapsed ? <ChevronRight size={14} /> : <><ChevronLeft size={14} /> Collapse</>}
+            {collapsed ? (
+              <ChevronRight size={14} />
+            ) : (
+              <>
+                <ChevronLeft size={14} /> Collapse
+              </>
+            )}
           </button>
           {!collapsed && (
             <p className="text-[10px] text-white/40 text-center mt-2 leading-tight">
-              Powered by Kerala Police<br />Cybercrime Police Station Palakkad
+              Powered by Kerala Police
+              <br />
+              Cybercrime Police Station Palakkad
             </p>
           )}
         </div>
@@ -122,9 +135,7 @@ export function AppShell() {
               <h2 className="text-[16px] font-semibold text-[#0a1f44] leading-tight">
                 Cybercrime Police Station
               </h2>
-              <p className="text-[12px] text-[#5a6478]">
-                Palakkad
-              </p>
+              <p className="text-[12px] text-[#5a6478]">Palakkad</p>
             </div>
           </div>
           <div className="text-right">

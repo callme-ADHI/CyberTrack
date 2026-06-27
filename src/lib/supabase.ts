@@ -9,8 +9,7 @@ const supabaseUrl =
   ((import.meta as any).env?.VITE_SUPABASE_URL as string) ??
   "https://zjqsdmpwgqliexgnzwwm.supabase.co";
 
-const supabaseKey =
-  ((import.meta as any).env?.VITE_SUPABASE_ANON_KEY as string) ?? "";
+const supabaseKey = ((import.meta as any).env?.VITE_SUPABASE_ANON_KEY as string) ?? "";
 
 if (!supabaseKey) {
   console.error("[Supabase] VITE_SUPABASE_ANON_KEY not set in .env.local");
@@ -30,10 +29,11 @@ export type Inquiry = {
   category_id: number;
   location_id: number;
   description: string;
-  rating: number;
-  complainant_name: string;
-  complainant_phone: string;
-  feedback: string;
+  rating: number | null;
+  complainant_name: string | null;
+  complainant_phone: string | null;
+  feedback: string | null;
+  reference_id: string | null;
   created_at: string;
   money_lost: number | null;
   categories?: Category | null;

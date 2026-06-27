@@ -39,6 +39,7 @@ DROP POLICY IF EXISTS "anon_update_categories"  ON categories;
 DROP POLICY IF EXISTS "anon_delete_categories"  ON categories;
 DROP POLICY IF EXISTS "anon_select_inquiries"   ON inquiries;
 DROP POLICY IF EXISTS "anon_insert_inquiries"   ON inquiries;
+DROP POLICY IF EXISTS "anon_update_inquiries"   ON inquiries;
 DROP POLICY IF EXISTS "anon_select_locations"   ON locations;
 DROP POLICY IF EXISTS "anon_insert_locations"   ON locations;
 DROP POLICY IF EXISTS "anon_update_locations"   ON locations;
@@ -68,12 +69,15 @@ CREATE POLICY "anon_insert_locations"
 CREATE POLICY "anon_insert_inquiries"
   ON inquiries FOR INSERT TO anon WITH CHECK (true);
 
--- 5. UPDATE policies — allow anon to edit categories and locations
+-- 5. UPDATE policies — allow anon to edit categories, locations, and inquiries
 CREATE POLICY "anon_update_categories"
   ON categories FOR UPDATE TO anon USING (true) WITH CHECK (true);
 
 CREATE POLICY "anon_update_locations"
   ON locations FOR UPDATE TO anon USING (true) WITH CHECK (true);
+
+CREATE POLICY "anon_update_inquiries"
+  ON inquiries FOR UPDATE TO anon USING (true) WITH CHECK (true);
 
 -- 6. DELETE policies — allow anon to delete categories and locations
 CREATE POLICY "anon_delete_categories"
