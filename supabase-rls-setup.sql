@@ -24,10 +24,11 @@ CREATE TABLE public.locations (
 );
 
 -- 4. Create inquiries table referencing categories and locations as integers
+-- ON DELETE SET DEFAULT is used so deleting a category/location reassigns linked cases to 'Other' (ID 1)
 CREATE TABLE public.inquiries (
     id BIGSERIAL PRIMARY KEY,
-    category_id INTEGER NOT NULL REFERENCES public.categories(id) ON UPDATE CASCADE,
-    location_id INTEGER NOT NULL REFERENCES public.locations(id) ON UPDATE CASCADE,
+    category_id INTEGER NOT NULL DEFAULT 1 REFERENCES public.categories(id) ON UPDATE CASCADE ON DELETE SET DEFAULT,
+    location_id INTEGER NOT NULL DEFAULT 1 REFERENCES public.locations(id) ON UPDATE CASCADE ON DELETE SET DEFAULT,
     description TEXT NOT NULL,
     rating INTEGER CHECK (rating >= 1 AND rating <= 5),
     complainant_name VARCHAR(255),
